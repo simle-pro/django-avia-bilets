@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Статистика — EventHub{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Статистика системы</h1>
+
+<!-- Общие цифры -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card card-body text-center shadow-sm">
+            <h6 class="text-muted">Всего событий</h6>
+            <h2 class="text-primary">{{ total_stats.total_events }}</h2>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-body text-center shadow-sm">
+            <h6 class="text-muted">Продано билетов</h6>
+            <h2 class="text-success">{{ total_stats.total_tickets_sold }}</h2>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-body text-center shadow-sm">
+            <h6 class="text-muted">Общая выручка</h6>
+            <h2 class="text-warning">{{ total_stats.total_revenue|floatformat:2 }}</h2>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Топ-5 популярных событий -->
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-dark text-white">🔥 Топ-5 популярных событий</div>
+            <ul class="list-group list-group-flush">
+                {% for event in top_events %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href="{% url 'event_detail' event.id %}">{{ event.title }}</a>
+                        <span class="badge bg-primary rounded-pill">{{ event.tickets }} билетов</span>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item text-muted">Нет данных</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Статистика по категориям -->
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-dark text-white">📂 Категории событий</div>
+            <ul class="list-group list-group-flush">
+                {% for cat in categories_stats %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ cat.name }}
+                        <span class="badge bg-secondary rounded-pill">{{ cat.events_count }} событий</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
